@@ -1,4 +1,4 @@
-package com.dataartisans.flinksolo;
+package com.dataartisans.flinksolo.simple;
 
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.java.DataSet;
@@ -7,9 +7,6 @@ import org.apache.flink.api.java.aggregation.Aggregations;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
 
-/**
- * Created by kkloudas on 1/14/16.
- */
 public class WordCountFile {
 
 	// *************************************************************************

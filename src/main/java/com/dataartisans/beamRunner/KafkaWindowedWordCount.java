@@ -1,8 +1,7 @@
-package com.dataartisans;
+package com.dataartisans.beamRunner;
 
 import com.dataartisans.flink.dataflow.FlinkPipelineRunner;
 import com.dataartisans.flink.dataflow.translation.wrappers.streaming.io.UnboundedFlinkSource;
-import com.dataartisans.flink.dataflow.translation.wrappers.streaming.io.UnboundedSocketSource;
 import com.google.cloud.dataflow.sdk.Pipeline;
 import com.google.cloud.dataflow.sdk.io.Read;
 import com.google.cloud.dataflow.sdk.io.TextIO;

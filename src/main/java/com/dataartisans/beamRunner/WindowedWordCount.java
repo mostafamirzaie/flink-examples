@@ -1,4 +1,4 @@
-package com.dataartisans;
+package com.dataartisans.beamRunner;
 
 import com.dataartisans.flink.dataflow.FlinkPipelineRunner;
 import com.dataartisans.flink.dataflow.translation.wrappers.streaming.io.UnboundedSocketSource;
