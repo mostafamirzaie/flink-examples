@@ -12,16 +12,20 @@ import org.apache.flink.util.Collector;
 
 public class AllTimeUserScores {
 
-	private static class InputParser implements FlatMapFunction<String, Tuple4<String, Integer, Integer, Long>> {
+	private static class InputParser implements FlatMapFunction<String, ScoreEvent> {
 
 		@Override
-		public void flatMap(String s, Collector<Tuple4<String, Integer, Integer, Long>> collector) throws Exception {
+		public void flatMap(String s, Collector<ScoreEvent> collector) throws Exception {
 			// we assume that the input is userId, teamId, score, timestamp
 			String[] tokens = s.split("\\s");
 			if(tokens.length != 4) {
 				throw new RuntimeException("Unknown input format.");
 			}
-			collector.collect(new Tuple4<>(tokens[0], Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Long.parseLong(tokens[3])));
+			collector.collect(new ScoreEvent(
+					Long.parseLong(tokens[0]),
+					Integer.parseInt(tokens[1]),
+					Integer.parseInt(tokens[2]),
+					Long.parseLong(tokens[3])));
 		}
 	}
 
@@ -29,13 +33,13 @@ public class AllTimeUserScores {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
 
-		DataStream<Tuple4<String, Integer, Integer, Long>> teamHourlyScores = env
+		DataStream<ScoreEvent> teamHourlyScores = env
 				.readTextFile(args[0])
 				.flatMap(new InputParser())
-				.keyBy(0)
+				.keyBy("userId")
 				.window(GlobalWindows.create())
 				.trigger(AccumulatingProcessingTimeTrigger.create(Time.minutes(10)))
-				.sum(2);
+				.sum("score");
 		teamHourlyScores.print();
 
 		env.execute("User Global Scores.");

@@ -1,9 +1,9 @@
 package com.dataartisans.flinksolo.beam_comparison;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
-import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.util.Collector;
 
 /**
@@ -11,16 +11,20 @@ import org.apache.flink.util.Collector;
  * */
 public class UserScores {
 
-	private static class InputParser implements FlatMapFunction<String, Tuple4<String, Integer, Integer, Long>> {
+	private static class InputParser implements FlatMapFunction<String, ScoreEvent> {
 
 		@Override
-		public void flatMap(String s, Collector<Tuple4<String, Integer, Integer, Long>> collector) throws Exception {
+		public void flatMap(String s, Collector<ScoreEvent> collector) throws Exception {
 			// we assume that the input is userId, teamId, score, timestamp
 			String[] tokens = s.split("\\s");
 			if(tokens.length != 4) {
 				throw new RuntimeException("Unknown input format.");
 			}
-			collector.collect(new Tuple4<>(tokens[0], Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Long.parseLong(tokens[3])));
+			collector.collect(new ScoreEvent(
+					Long.parseLong(tokens[0]),
+					Integer.parseInt(tokens[1]),
+					Integer.parseInt(tokens[2]),
+					Long.parseLong(tokens[3])));
 		}
 	}
 
@@ -28,11 +32,20 @@ public class UserScores {
 	public static void main(String[] args) throws Exception {
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
-		DataSet<Tuple4<String, Integer, Integer, Long>> userScores = env
+		DataSet<ScoreEvent> userScores = env
 				.readTextFile(args[0])
 				.flatMap(new InputParser())
-				.groupBy(0)
-				.sum(2);
+				.groupBy("userId")
+				.reduce(new ReduceFunction<ScoreEvent>() {
+					@Override
+					public ScoreEvent reduce(ScoreEvent value1, ScoreEvent value2) throws Exception {
+						return new ScoreEvent(
+								value1.getUserId(),
+								value1.getTeamId(),
+								value1.getScore() + value2.getScore(),
+								value1.getTimestamp());
+					}
+				});
 
 		userScores.print();
 	}
