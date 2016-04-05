@@ -50,7 +50,7 @@ public class ScoreEvent {
 
 	public String toString() {
 		return	"User: " + this.userId +
-				" TeamL " + this.teamId +
+				" Team: " + this.teamId +
 				" Score: " + this.score +
 				" Timestamp: " + this.timestamp;
 	}

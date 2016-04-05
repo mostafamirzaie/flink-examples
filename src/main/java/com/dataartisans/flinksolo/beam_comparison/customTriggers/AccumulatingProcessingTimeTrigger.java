@@ -1,6 +1,5 @@
 package com.dataartisans.flinksolo.beam_comparison.customTriggers;
 
-
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeutils.base.LongSerializer;
@@ -9,7 +8,6 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.triggers.Trigger;
 import org.apache.flink.streaming.api.windowing.triggers.TriggerResult;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
-import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 
 public class AccumulatingProcessingTimeTrigger extends Trigger<Object, GlobalWindow> {
 

@@ -2,7 +2,6 @@ package com.dataartisans.flinksolo.beam_comparison;
 
 import com.dataartisans.flinksolo.beam_comparison.customTriggers.AccumulatingProcessingTimeTrigger;
 import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
