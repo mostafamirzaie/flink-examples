@@ -1,4 +1,4 @@
-package com.dataartisans.flinksolo.customTriggers;
+package com.dataartisans.flinksolo.beam_comparison.customTriggers;
 
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
